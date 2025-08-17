@@ -100,8 +100,8 @@ const Proof = () => {
                 key={testimonial.id} 
                 className={`absolute top-0 w-full max-w-2xl transform transition-all duration-500 ${getCardAnimationClass(index)}`} 
               >
-                <Card className="overflow-hidden h-[350px] border border-gray-200 shadow-lg hover:shadow-xl flex flex-col bg-white">
-                  <CardContent className="p-8 flex flex-col flex-grow text-center">
+                <Card className="overflow-hidden h-[350px] border border-gray-200 shadow-lg hover:shadow-xl flex flex-col bg-white group">
+                  <CardContent className="p-8 flex flex-col flex-grow text-center overflow-y-auto scrollbar-hide group-hover:scrollbar-thin group-hover:scrollbar-thumb-gray-300 group-hover:scrollbar-track-transparent">
                     <div className="mb-6">
                       <h3 className="text-2xl font-bold mb-2 text-gray-800">
                         {testimonial.title}
@@ -117,7 +117,7 @@ const Proof = () => {
                     <p className="text-gray-600 mb-6 flex-grow">{testimonial.description}</p>
                     
                     <div className="space-y-2">
-                      {testimonial.metrics.map((metric, idx) => (
+                      {testimonials[activeTestimonial].metrics.map((metric, idx) => (
                         <div key={idx} className="text-sm text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
                           ✅ {metric}
                         </div>

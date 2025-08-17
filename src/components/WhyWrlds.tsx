@@ -1,177 +1,189 @@
-import { useState, useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { Layers, BarChart, AlertTriangle, Clock4, Rocket, Zap, Sparkles, ArrowRight, Award, Target, Shield, ChartBar } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Link } from "react-router-dom";
-
-const AnimatedCounter = ({
-  end,
-  duration = 2000,
-  prefix = "",
-  suffix = "",
-  decimals = 0
-}: {
-  end: number;
-  duration?: number;
-  prefix?: string;
-  suffix?: string;
-  decimals?: number;
-}) => {
-  const [count, setCount] = useState(0);
-  const countRef = useRef(null);
-  const inView = useInView(countRef, {
-    once: true,
-    margin: "-100px"
-  });
-  useEffect(() => {
-    if (!inView) return;
-    let startTime: number;
-    let animationFrame: number;
-    const startAnimation = (timestamp: number) => {
-      startTime = timestamp;
-      animate(timestamp);
-    };
-    const animate = (timestamp: number) => {
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      const currentCount = progress * end;
-      setCount(currentCount);
-      if (progress < 1) {
-        animationFrame = requestAnimationFrame(animate);
-      }
-    };
-    animationFrame = requestAnimationFrame(startAnimation);
-    return () => {
-      if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
-      }
-    };
-  }, [end, duration, inView]);
-  return <span ref={countRef} className="font-bold tabular-nums">
-      {prefix}{count.toFixed(decimals)}{suffix}
-    </span>;
-};
+import { motion } from "framer-motion";
+import { Zap, BarChart, Rocket, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import CalendlyModal from "./CalendlyModal";
 
 const WhyWrlds = () => {
-  const isMobile = useIsMobile();
+  const [isCalendlyModalOpen, setIsCalendlyModalOpen] = useState(false);
+
   const containerVariants = {
-    hidden: {
-      opacity: 0
-    },
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.3,
-        duration: 0.8
+        staggerChildren: 0.1
       }
     }
   };
+
   const itemVariants = {
-    hidden: {
-      y: 20,
-      opacity: 0
-    },
+    hidden: { opacity: 0, y: 20 },
     visible: {
-      y: 0,
       opacity: 1,
+      y: 0,
       transition: {
         duration: 0.6
       }
     }
   };
-  return <section id="why-wrlds" className="relative py-16 md:py-24 bg-white overflow-hidden">
-      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div className="text-center mb-12 md:mb-16" initial="hidden" whileInView="visible" viewport={{
-        once: true,
-        margin: "-100px"
-      }} variants={containerVariants}>
-          <motion.h2 variants={itemVariants} className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3">
-            Why Keep Paying for People When Code Can Do It Better?
-          </motion.h2>
-          <motion.p variants={itemVariants} className="text-gray-600 text-lg max-w-3xl mx-auto">
-            Every 7– and 8–figure company hits the same wall: growth comes with bloated payroll, endless busywork, and $100K consultants who talk more than they ship.
-          </motion.p>
-        </motion.div>
+
+  return (
+    <>
+      <section id="why-wrlds" className="relative py-16 md:py-24 bg-white overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-full opacity-60"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-gray-50 to-blue-50 rounded-full opacity-60"></div>
+        </div>
         
-        <motion.div className="mb-8" initial="hidden" whileInView="visible" viewport={{
-        once: true,
-        margin: "-100px"
-      }} variants={containerVariants}>
-          <motion.p variants={itemVariants} className="text-gray-600 text-lg max-w-4xl mx-auto leading-relaxed">
-            Custom AI flips that script. Instead of throwing more people (and money) at the problem, we turn your processes into code — unlocking new recurring SaaS revenue streams for your customers, or automating the internal work that eats 30–50% of employee time.
-          </motion.p>
-          <motion.p variants={itemVariants} className="text-gray-600 text-lg max-w-4xl mx-auto mt-6 leading-relaxed">
-            <strong className="text-gray-900">The result: fewer costs, more output, faster growth.</strong>
-          </motion.p>
-          <motion.p variants={itemVariants} className="text-gray-600 text-lg max-w-4xl mx-auto mt-6 leading-relaxed">
-            👉 <strong className="text-gray-900">The winners aren't hiring more. They're coding smarter.</strong>
-          </motion.p>
-        </motion.div>
-        
-        <motion.div className="mb-12" initial="hidden" whileInView="visible" viewport={{
-          once: true,
-          margin: "-100px"
-        }} variants={containerVariants}>
-          <motion.div variants={itemVariants} className="text-center mb-8">
-            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
-              That means:
-            </h3>
+        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            className="text-center mb-16" 
+            initial="hidden" 
+            whileInView="visible" 
+            viewport={{ once: true, margin: "-100px" }}
+            variants={itemVariants}
+          >
+            <motion.h2 
+              variants={itemVariants} 
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight"
+            >
+              Why Keep Paying for People When Code Can Do It Better?
+            </motion.h2>
           </motion.div>
           
-          <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <motion.div variants={itemVariants} className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all">
-              <div className="flex items-start">
-                <div className="bg-gray-200 rounded-full p-3 mr-4">
-                  <Zap className="w-6 h-6 text-gray-700" />
+          <motion.div 
+            className="mb-16" 
+            initial="hidden" 
+            whileInView="visible" 
+            viewport={{ once: true, margin: "-100px" }}
+            variants={containerVariants}
+          >
+            <div className="max-w-5xl mx-auto">
+              <motion.div 
+                variants={itemVariants}
+                className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-8 md:p-12 mb-8 border border-gray-100 shadow-sm"
+              >
+                <motion.p 
+                  variants={itemVariants} 
+                  className="text-gray-600 text-lg md:text-xl max-w-4xl mx-auto leading-relaxed mb-6"
+                >
+                  Every 7– and 8–figure company hits the same wall: growth comes with bloated payroll, endless busywork, and $100K consultants who talk more than they ship.
+                </motion.p>
+                <motion.p 
+                  variants={itemVariants} 
+                  className="text-gray-600 text-lg md:text-xl max-w-4xl mx-auto leading-relaxed mb-6"
+                >
+                  Custom AI flips that script. Instead of throwing more people (and money) at the problem, we turn your processes into code — unlocking new recurring SaaS revenue streams for your customers, or automating the internal work that eats 30–50% of employee time.
+                </motion.p>
+                <motion.div 
+                  variants={itemVariants}
+                  className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm"
+                >
+                  <p className="text-xl md:text-2xl font-bold text-gray-900 text-center">
+                    The result: fewer costs, more output, faster growth.
+                  </p>
+                </motion.div>
+              </motion.div>
+              
+              <motion.div 
+                variants={itemVariants}
+                className="text-center"
+              >
+                <div className="inline-flex items-center bg-gray-900 text-white px-6 py-4 rounded-full text-lg font-semibold shadow-lg">
+                  <span className="mr-3">👉</span>
+                  <span>The winners aren't hiring more. They're coding smarter.</span>
                 </div>
-                <div>
-                  <h4 className="text-xl font-bold text-gray-900 mb-2">Automations that cut 30–50% of wasted hours</h4>
-                </div>
-              </div>
+              </motion.div>
+            </div>
+          </motion.div>
+          
+          <motion.div 
+            className="mb-12" 
+            initial="hidden" 
+            whileInView="visible" 
+            viewport={{ once: true, margin: "-100px" }}
+            variants={containerVariants}
+          >
+            <motion.div 
+              variants={itemVariants} 
+              className="text-center mb-12"
+            >
+              <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                That means:
+              </h3>
             </motion.div>
             
-            <motion.div variants={itemVariants} className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all">
-              <div className="flex items-start">
-                <div className="bg-gray-200 rounded-full p-3 mr-4">
-                  <BarChart className="w-6 h-6 text-gray-700" />
+            <motion.div 
+              variants={containerVariants} 
+              className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto"
+            >
+              <motion.div 
+                variants={itemVariants} 
+                className="bg-gradient-to-br from-gray-50 to-blue-50 p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+              >
+                <div className="flex items-start">
+                  <div className="bg-blue-100 rounded-full p-4 mr-6">
+                    <Zap className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-gray-900 mb-3">Automations that cut 30–50% of wasted hours</h4>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-xl font-bold text-gray-900 mb-2">SaaS tools that create new recurring revenue streams</h4>
+              </motion.div>
+              
+              <motion.div 
+                variants={itemVariants} 
+                className="bg-gradient-to-br from-gray-50 to-green-50 p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+              >
+                <div className="flex items-start">
+                  <div className="bg-green-100 rounded-full p-4 mr-6">
+                    <BarChart className="w-8 h-8 text-green-600" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-gray-900 mb-3">SaaS tools that create new recurring revenue streams</h4>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-            
-            <motion.div variants={itemVariants} className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all">
-              <div className="flex items-start">
-                <div className="bg-gray-200 rounded-full p-3 mr-4">
-                  <Rocket className="w-6 h-6 text-gray-700" />
+              </motion.div>
+              
+              <motion.div 
+                variants={itemVariants} 
+                className="bg-gradient-to-br from-gray-50 to-purple-50 p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+              >
+                <div className="flex items-start">
+                  <div className="bg-purple-100 rounded-full p-4 mr-6">
+                    <Rocket className="w-8 h-8 text-purple-600" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-gray-900 mb-3">A competitive edge that scales faster than headcount ever could</h4>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-xl font-bold text-gray-900 mb-2">A competitive edge that scales faster than headcount ever could</h4>
-                </div>
-              </div>
+              </motion.div>
             </motion.div>
           </motion.div>
           
-          <motion.div variants={itemVariants} className="text-center mt-10">
+          <motion.div 
+            variants={itemVariants} 
+            className="text-center"
+          >
             <button 
-              onClick={() => {
-                const contactSection = document.getElementById('contact-info');
-                if (contactSection) {
-                  contactSection.scrollIntoView({
-                    behavior: 'smooth'
-                  });
-                }
-              }}
-              className="inline-flex items-center px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all group"
+              onClick={() => setIsCalendlyModalOpen(true)}
+              className="inline-flex items-center px-8 py-4 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-all text-lg font-semibold shadow-lg hover:shadow-xl group"
             >
               👉 "See What We Could Build For You" → Book call
-              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </motion.div>
-        </motion.div>
-      </div>
-    </section>;
+        </div>
+      </section>
+
+      {/* Calendly Modal */}
+      <CalendlyModal 
+        isOpen={isCalendlyModalOpen} 
+        onClose={() => setIsCalendlyModalOpen(false)} 
+      />
+    </>
+  );
 };
 
 export default WhyWrlds;
